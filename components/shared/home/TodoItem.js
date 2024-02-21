@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 
 const TodoItem = ({ item, clickHandler }) => {
-  // console.log(item)
+  console.log(item)
   return (
     <TouchableOpacity onPress={() => clickHandler(item?.key)}>
       <View style={styles.box}>
@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
   box: {
     borderColor: "#282A32",
     borderWidth: 1,
+    borderStyle: "dashed",
     padding: 15,
     width: "100%",
     borderRadius: 10,

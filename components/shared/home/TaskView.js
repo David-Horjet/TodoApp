@@ -1,44 +1,42 @@
 import React, { useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import TodoItem from "./TodoItem";
 
-const TaskView = () => {
-  const data = [
-    {
-      key: "1",
-      content: "Cook my meal",
-    },
-    {
-      key: "2",
-      content: "Cook my meal",
-    },
-    {
-      key: "3",
-      content: "Cook my meal",
-    },
-    {
-      key: "4",
-      content: "Cook my meal",
-    },
-  ];
-  const [todos, setTodos] = useState(data);
-  const clickHandler = (key) => {
-    setTodos((prevTodos) => {
-        return prevTodos.filter(todo => todo.key != key)
-    })
-  }
+const TaskView = ({ clickHandler, todos, inputHandler }) => {
   return (
     <View style={styles.container_xl}>
       <View style={styles.section_header}>
         <Text style={styles.tasks}>Tasks</Text>
         <Text style={styles.view}>View more</Text>
       </View>
-      <FlatList
-        data={todos}
-        renderItem={({ item }) => (
-          <TodoItem item={item} clickHandler={clickHandler}/>
-        )}
-      />
+      {todos.length < 1 ? (
+        <>
+          <Text style={styles.add_task}>
+            You don't have any active Todo List, Please add one by tapping the
+            button below?
+          </Text>
+          <TouchableOpacity
+            style={styles.button_container}
+            onPress={() => inputHandler()}
+          >
+            <Text style={styles.add}>Add Task</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <FlatList
+          style={styles.list}
+          data={todos}
+          renderItem={({ item }) => (
+            <TodoItem item={item} clickHandler={clickHandler} />
+          )}
+        />
+      )}
     </View>
   );
 };
@@ -62,13 +60,27 @@ const styles = StyleSheet.create({
     color: "#AEB1BB",
     fontSize: 12,
   },
-  box: {
-    borderColor: "#282A32",
-    borderWidth: 1,
-    padding: 15,
-    width: "100%",
+  list: {
+    // flex: 1,
+  },
+  add_task: {
+    color: "#fff",
+    alignItems: "center",
+    marginBottom: 20,
+    marginTop: 40,
+    textAlign: "center",
+  },
+
+  button_container: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     borderRadius: 10,
-    marginTop: 20,
+    backgroundColor: "#FBB875",
+    marginHorizontal: 20,
+    marginTop: 10,
+    color: "#fff",
+    flexDirection: "row",
+    justifyContent: "center",
   },
 });
 

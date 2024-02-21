@@ -1,12 +1,34 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
-const Header = () => {
-  const [showInput, setShowInput] = useState(true);
-  const inputHandler = () => {
-    setShowInput(!showInput);
+const Header = ({ setTodos, clickHandler, showInput, inputHandler }) => {
+  const [text, setText] = useState("");
+  console.log(text)
+  const handleChange = (val) => {
+    setText(val);
+  };
+  const handleSubmit = () => {
+    if (text.length < 5) {
+      Alert.alert("Invalid Entry!!!", "Please enter at least 5 characters..", [
+        { text: "Okay" },
+      ]);
+    } else {
+      setTodos((prevTodos) => {
+        return [
+          ...prevTodos,
+          { content: text, key: Math.random().toString() },
+        ];
+      });
+    }
   };
   return (
     <View style={styles.header}>
@@ -15,21 +37,39 @@ const Header = () => {
           <FontAwesome5 name="mastodon" size={26} color="#FBB875" />
           <Text style={styles.name}>TodoApp</Text>
         </View>
-        <AntDesign
-          name="pluscircleo"
-          size={24}
-          color="#AEB1BB"
-          onPress={inputHandler}
-        />
+        {showInput ? (
+          <AntDesign
+            name="minuscircleo"
+            size={24}
+            color="#AEB1BB"
+            onPress={inputHandler}
+          />
+        ) : (
+          <AntDesign
+            name="pluscircleo"
+            size={24}
+            color="#AEB1BB"
+            onPress={inputHandler}
+          />
+        )}
       </View>
       {showInput && (
-        <View style={styles.input_container}>
-          <TextInput
-            style={styles.input}
-            placeholder="What are you doing today 😎?"
-            placeholderTextColor={"#AEB1BB"}
-          />
-        </View>
+        <>
+          <View style={styles.input_container}>
+            <TextInput
+              onChangeText={(val) => handleChange(val)}
+              style={styles.input}
+              placeholder="What are you doing today 😎?"
+              placeholderTextColor={"#AEB1BB"}
+            />
+          </View>
+          <TouchableOpacity
+            style={styles.button_container}
+            onPress={() => handleSubmit()}
+          >
+            <Text style={styles.add}>Add</Text>
+          </TouchableOpacity>
+        </>
       )}
     </View>
   );
@@ -68,6 +108,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 20,
     color: "#fff",
+  },
+  button_container: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10,
+    backgroundColor: "#FBB875",
+    marginHorizontal: 20,
+    marginTop: 10,
+    color: "#fff",
+    flexDirection: "row",
+    justifyContent: "center",
   },
 });
 
